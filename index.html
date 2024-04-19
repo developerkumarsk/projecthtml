@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Collection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+          <div class="container">
+          
+            <ul class="nav-links">
+              <li id="home"><a href="/index.html">Home</a></li>
+         <input type="text" id="searchInput" placeholder="Search by title">
+             <button id="searchButton">Search</button>
+            </ul>
+        
+     
+          </div>
+        </nav>
+      </header>
+
+
+
+    <div id="contener"></div>
+
+    <script>
+        const url = "/Movie.json";
+        const contener = document.getElementById("contener");
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+
+        async function fetchData() {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                Display(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchData();
+        
+        function Display(data) {
+            data.forEach(function (movie) {
+                let card = document.createElement("div");
+        
+                let Title = document.createElement("h2");
+                let Actors = document.createElement("h3");
+                let Year = document.createElement("p");
+                let Country = document.createElement("p");
+                let Awards = document.createElement("p");
+                let Genre = document.createElement("p");
+                let Images = document.createElement("img");
+                let Download = document.createElement("button");
+
+                Title.innerText = movie.Title;
+                Actors.innerText = movie.Actors;
+                Country.innerText = movie.Country;
+                Year.innerText = movie.Year;
+                Awards.innerText = "Awards: " + movie.Awards;
+                Genre.innerText = "Genre: " + movie.Genre;
+                Images.setAttribute("src", movie.Images.length > 0 ? movie.Images[0] : "");
+
+                Download.innerText = "Download";
+                Download.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    window.location.href = "#";
+                });
+
+                card.append(Title, Actors, Country, Year, Awards, Genre, Images, Download);
+                contener.append(card);
+            });
+        }
+        
+        searchButton.addEventListener("click", function () {
+            const searchTerm = searchInput.value.toLowerCase();
+            const cards = contener.querySelectorAll("div");
+
+            cards.forEach(card => {
+                const title = card.querySelector("h2").innerText.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
